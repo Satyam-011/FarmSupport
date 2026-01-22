@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FarmCalender AI | Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              emerald: {
+                50: "#ecfdf5",
+                100: "#d1fae5",
+                500: "#10b981",
+                600: "#059669",
+                700: "#047857",
+                900: "#064e3b",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
+
+      body {
+        font-family: "Outfit", sans-serif;
+        transition:
+          background-color 0.4s ease,
+          color 0.4s ease;
+      }
+
+      .hero-gradient {
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+          url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80");
+        background-size: cover;
+        background-position: center;
+      }
+
+      .dark .hero-gradient {
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+          url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80");
+        background-size: cover;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .dark .glass {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow:
+          0 10px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      }
+
+      .pulse-emerald {
+        animation: pulse-border 2s infinite;
+      }
+
+      @keyframes pulse-border {
+        0% {
+          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Custom print styles */
+      @media print {
+        .hero-gradient,
+        #calendar-form,
+        #loader,
+        #theme-toggle,
+        #lang-select,
+        .quick-suggestions {
+          display: none !important;
+        }
+        .max-w-5xl {
+          margin-top: 0 !important;
+        }
+        .glass {
+          background: white !important;
+          backdrop-filter: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-100 text-slate-900 dark:bg-slate-950 dark:text-slate-50 min-h-screen"
+  >
+    <!-- Hero Section -->
+    <div
+      class="hero-gradient h-64 w-full relative flex items-center justify-center"
+    >
+      <div class="absolute inset-0 bg-emerald-900/20"></div>
+      <div class="relative z-10 text-center px-4">
+        <h1
+          id="ui-title"
+          class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg mb-2"
+        >
+          FarmCalender AI
+        </h1>
+        <p
+          id="ui-subtitle"
+          class="text-emerald-50 font-medium max-w-lg mx-auto drop-shadow-md"
+        >
+          Precision planning for every Indian farmer
+        </p>
+      </div>
+    </div>
+
+    <div id="app" class="max-w-5xl mx-auto px-4 -mt-16 pb-20 relative z-20">
+      <!-- Controls Header -->
+      <div
+        class="glass rounded-3xl p-4 shadow-2xl flex flex-wrap justify-between items-center gap-4 mb-8"
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="bg-emerald-500 p-2.5 rounded-xl text-white shadow-lg pulse-emerald"
+          >
+            <i class="fas fa-leaf text-xl"></i>
+          </div>
+          <div class="hidden sm:block">
+            <span class="text-xs uppercase tracking-widest font-bold opacity-60"
+              >Status</span
+            >
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              <span class="text-sm font-semibold">AI Assistant Online</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <select
+              id="lang-select"
+              class="bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-2.5 pr-10 focus:ring-2 focus:ring-emerald-500 text-sm font-bold cursor-pointer appearance-none transition-all"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+              <option value="mr">मराठी (Marathi)</option>
+            </select>
+            <i
+              class="fas fa-language absolute right-3 top-3 pointer-events-none opacity-50"
+            ></i>
+          </div>
+
+          <button
+            id="theme-toggle"
+            class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
+          >
+            <i id="theme-icon" class="fas fa-moon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Input Card -->
+      <div
+        class="glass rounded-3xl p-8 shadow-xl mb-12 border-t-4 border-emerald-500"
+      >
+        <div class="max-w-2xl mx-auto">
+          <div class="flex flex-col items-center mb-6">
+            <h2 id="ui-prompt" class="text-2xl font-bold text-center mb-2">
+              What crop are you growing?
+            </h2>
+            <div class="h-1 w-20 bg-emerald-500 rounded-full"></div>
+          </div>
+
+          <form id="calendar-form" class="relative group">
+            <div
+              class="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-25 group-focus-within:opacity-50 transition duration-1000"
+            ></div>
+            <div
+              class="relative flex bg-white dark:bg-slate-900 rounded-2xl p-1 shadow-sm"
+            >
+              <input
+                type="text"
+                id="crop-input"
+                class="w-full bg-transparent border-none px-6 py-4 focus:outline-none text-lg font-medium text-slate-800 dark:text-white"
+                placeholder="e.g. Rice, Sugarcane, Wheat..."
+                required
+              />
+              <button
+                type="submit"
+                class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 rounded-xl transition-all font-bold flex items-center gap-2"
+              >
+                <span class="hidden sm:inline">Go</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+
+          <div
+            class="mt-4 flex flex-wrap justify-center gap-2 quick-suggestions"
+          >
+            <span
+              class="text-xs font-bold uppercase opacity-50 w-full text-center mb-1"
+              >Quick Suggestions</span
+            >
+            <button
+              onclick="suggest('Rice')"
+              class="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-500 hover:text-white transition-all"
+            >
+              Rice
+            </button>
+            <button
+              onclick="suggest('Wheat')"
+              class="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-500 hover:text-white transition-all"
+            >
+              Wheat
+            </button>
+            <button
+              onclick="suggest('Cotton')"
+              class="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-500 hover:text-white transition-all"
+            >
+              Cotton
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loader" class="hidden text-center py-20 fade-in">
+        <div class="relative inline-block">
+          <div
+            class="h-24 w-24 rounded-full border-4 border-emerald-200 dark:border-emerald-900 border-t-emerald-500 animate-spin"
+          ></div>
+          <i
+            class="fas fa-robot absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-emerald-500 text-2xl"
+          ></i>
+        </div>
+        <p
+          id="ui-loading"
+          class="mt-6 text-lg font-bold text-slate-600 dark:text-slate-300"
+        >
+          Consulting AI agricultural experts...
+        </p>
+      </div>
+
+      <!-- Results Section -->
+      <div id="result-container" class="hidden space-y-8 fade-in">
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4"
+        >
+          <div>
+            <span
+              class="text-xs font-black uppercase text-emerald-500 tracking-tighter"
+              >AI Analysis Complete</span
+            >
+            <h3 class="text-4xl font-black">
+              <span id="ui-result-title">Guide for</span>
+              <span
+                id="display-crop-name"
+                class="text-emerald-600 dark:text-emerald-400 capitalize underline decoration-wavy underline-offset-8"
+              ></span>
+            </h3>
+          </div>
+          <button
+            onclick="window.print()"
+            class="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 transition-all text-sm font-bold flex items-center gap-2"
+          >
+            <i class="fas fa-print"></i> Print Guide
+          </button>
+        </div>
+
+        <div
+          id="calendar-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <!-- Cards injected here -->
+        </div>
+
+        <!-- Disclaimer -->
+        <div
+          class="glass rounded-3xl p-6 flex gap-5 border-l-8 border-amber-500 shadow-lg"
+        >
+          <div class="bg-amber-100 dark:bg-amber-900/50 p-4 rounded-2xl h-fit">
+            <i
+              class="fas fa-shield-halved text-amber-600 dark:text-amber-400 text-2xl"
+            ></i>
+          </div>
+          <div>
+            <h5 class="font-bold text-amber-800 dark:text-amber-200 mb-1">
+              Important Safety Notice
+            </h5>
+            <p
+              id="ui-disclaimer"
+              class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed"
+            ></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Box -->
+      <div
+        id="error-box"
+        class="hidden glass border-red-500 rounded-3xl p-8 text-center fade-in"
+      >
+        <div
+          class="bg-red-100 dark:bg-red-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
+          <i class="fas fa-wifi-slash text-red-600 text-2xl"></i>
+        </div>
+        <h4 class="text-xl font-bold mb-2">Issue Encountered</h4>
+        <p id="ui-error-text" class="text-slate-500 max-w-sm mx-auto"></p>
+      </div>
+    </div>
+
+    <script>
+      const apiKey = "ENTER_API_KEY";
+      const MODEL_NAME = "ENTER_MODEL_NAME";
+
+      const TRANSLATIONS = {
+        en: {
+          title: "FarmCalender AI",
+          subtitle: "Precision planning for every Indian farmer",
+          promptStep1: "What crop are you growing?",
+          promptStep2: "Any specific symptoms or problems with your {crop}?",
+          thinking: "Consulting AI agricultural experts...",
+          placeholderStep1: "e.g. Rice, Wheat, Sugarcane...",
+          placeholderStep2: "e.g. Yellow leaves, pests, low yield...",
+          resultTitle: "Guide for",
+          disclaimer:
+            "Recommendations are AI-generated based on general patterns. Consult your local Krishi Bhavan or expert before applying chemical treatments.",
+          error:
+            "Unable to reach the AI server. Check your connection or try again later.",
+          sections: {
+            sowing: "Sowing & Soil",
+            irrigation: "Watering Schedule",
+            pesticide: "Disease Control",
+            insecticide: "Pest Management",
+            fertilizer: "Nutrient Needs",
+            additional: "Harvest & Post-Care",
+          },
+        },
+        hi: {
+          title: "फार्मकैलेंडर AI",
+          subtitle: "हर भारतीय किसान के लिए सटीक नियोजन",
+          promptStep1: "आप कौन सी फसल उगा रहे हैं?",
+          promptStep2: "आपकी {crop} फसल में क्या समस्या आ रही है?",
+          thinking: "कृषि विशेषज्ञों से परामर्श कर रहा हूँ...",
+          placeholderStep1: "जैसे: चावल, गेहूं, गन्ना...",
+          placeholderStep2: "जैसे: पीले पत्ते, कीट, कम उपज...",
+          resultTitle: "मार्गदर्शिका:",
+          disclaimer:
+            "ये सुझाव AI द्वारा तैयार किए गए हैं। रसायनों के उपयोग से पहले स्थानीय कृषि विशेषज्ञों से सलाह लें।",
+          error: "सर्वर तक पहुँचने में असमर्थ। कृपया पुन: प्रयास करें।",
+          sections: {
+            sowing: "बुवाई और मिट्टी",
+            irrigation: "सिंचाई कार्यक्रम",
+            pesticide: "रोग नियंत्रण",
+            insecticide: "कीट प्रबंधन",
+            fertilizer: "पोषक तत्व",
+            additional: "कटाई और देखभाल",
+          },
+        },
+      };
+
+      const state = {
+        lang: "en",
+        darkMode: false,
+        step: 0, // 0: Asking Crop, 1: Asking Problem
+        userData: { crop: "", problem: "" },
+      };
+
+      const ui = {
+        langSelect: document.getElementById("lang-select"),
+        title: document.getElementById("ui-title"),
+        subtitle: document.getElementById("ui-subtitle"),
+        prompt: document.getElementById("ui-prompt"),
+        resultTitle: document.getElementById("ui-result-title"),
+        disclaimer: document.getElementById("ui-disclaimer"),
+        errorText: document.getElementById("ui-error-text"),
+        themeToggle: document.getElementById("theme-toggle"),
+        themeIcon: document.getElementById("theme-icon"),
+        resultContainer: document.getElementById("result-container"),
+        errorBox: document.getElementById("error-box"),
+        calendarGrid: document.getElementById("calendar-grid"),
+        displayCropName: document.getElementById("display-crop-name"),
+        cropInput: document.getElementById("crop-input"),
+        form: document.getElementById("calendar-form"),
+        loader: document.getElementById("loader"),
+        loadingText: document.getElementById("ui-loading"),
+      };
+
+      function updateUIStrings() {
+        const t = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+        ui.title.textContent = t.title;
+        ui.subtitle.textContent = t.subtitle;
+        ui.disclaimer.textContent = t.disclaimer;
+        ui.loadingText.textContent = t.thinking;
+
+        if (state.step === 0) {
+          ui.prompt.textContent = t.promptStep1;
+          ui.cropInput.placeholder = t.placeholderStep1;
+        } else {
+          ui.prompt.textContent = t.promptStep2.replace(
+            "{crop}",
+            state.userData.crop,
+          );
+          ui.cropInput.placeholder = t.placeholderStep2;
+        }
+      }
+
+      async function fetchCalendar(crop, problem) {
+        ui.loader.classList.remove("hidden");
+        ui.resultContainer.classList.add("hidden");
+        ui.errorBox.classList.add("hidden");
+
+        const t = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+
+        const systemPrompt = `You are an expert Indian Agricultural Scientist. 
+          Provide a specific, actionable farming guide for the crop and problem provided. 
+          Include technical names of diseases if applicable. 
+          The output MUST be a valid JSON object with these keys: 
+          "sowing", "irrigation", "pesticide", "insecticide", "fertilizer", "additional".
+          Values must be arrays of strings in ${state.lang}.`;
+
+        const userQuery = `Crop: ${crop}. Current Problems/Context: ${problem}. Provide a comprehensive seasonal calendar and solution guide in ${state.lang}.`;
+
+        try {
+          const response = await fetchWithRetry(
+            `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: { responseMimeType: "application/json" },
+              }),
+            },
+          );
+
+          const result = await response.json();
+          const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+          const data = JSON.parse(text);
+
+          renderCalendar(data);
+        } catch (err) {
+          console.error(err);
+          ui.errorText.textContent = t.error;
+          ui.errorBox.classList.remove("hidden");
+        } finally {
+          ui.loader.classList.add("hidden");
+        }
+      }
+
+      async function fetchWithRetry(url, options, retries = 5) {
+        let delay = 1000;
+        for (let i = 0; i < retries; i++) {
+          try {
+            const res = await fetch(url, options);
+            if (res.ok) return res;
+            if (res.status === 429) throw new Error("Rate limit");
+            return res; // Return even if error to handle in main
+          } catch (e) {
+            if (i === retries - 1) throw e;
+            await new Promise((r) => setTimeout(r, delay));
+            delay *= 2;
+          }
+        }
+      }
+
+      function renderCalendar(data) {
+        const t = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+        ui.calendarGrid.innerHTML = "";
+        ui.displayCropName.textContent = state.userData.crop;
+
+        const iconMap = {
+          sowing: { icon: "fa-seedling", color: "emerald" },
+          irrigation: { icon: "fa-droplet", color: "blue" },
+          pesticide: { icon: "fa-shield-virus", color: "indigo" },
+          insecticide: { icon: "fa-bug", color: "red" },
+          fertilizer: { icon: "fa-flask-vial", color: "amber" },
+          additional: { icon: "fa-circle-info", color: "slate" },
+        };
+
+        Object.entries(data).forEach(([key, items]) => {
+          if (!t.sections[key] || !Array.isArray(items)) return;
+          const cfg = iconMap[key] || iconMap.additional;
+
+          const card = document.createElement("div");
+          card.className = `glass p-6 rounded-3xl border-b-4 border-${cfg.color}-500 card-hover transition-all animate-fade-in shadow-lg`;
+
+          const listHtml = items
+            .map(
+              (item) => `
+            <li class="flex items-start gap-2 mb-2">
+              <i class="fas fa-check-circle text-${cfg.color}-500 mt-1 text-xs"></i>
+              <span class="text-sm">${item}</span>
+            </li>
+          `,
+            )
+            .join("");
+
+          card.innerHTML = `
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-${cfg.color}-500 text-white flex items-center justify-center shadow-md">
+                <i class="fas ${cfg.icon}"></i>
+              </div>
+              <h4 class="font-bold">${t.sections[key]}</h4>
+            </div>
+            <ul class="space-y-1">${listHtml}</ul>
+          `;
+          ui.calendarGrid.appendChild(card);
+        });
+
+        ui.resultContainer.classList.remove("hidden");
+      }
+
+      function handleSubmission(e) {
+        if (e) e.preventDefault();
+        const value = ui.cropInput.value.trim();
+        if (!value) return;
+
+        if (state.step === 0) {
+          state.userData.crop = value;
+          state.step = 1;
+          ui.cropInput.value = "";
+          updateUIStrings();
+        } else {
+          state.userData.problem = value;
+          fetchCalendar(state.userData.crop, state.userData.problem);
+          // Reset to step 0 for next search
+          state.step = 0;
+          ui.cropInput.value = "";
+          updateUIStrings();
+        }
+      }
+
+      function suggest(crop) {
+        ui.cropInput.value = crop;
+        handleSubmission();
+      }
+
+      // Event Listeners
+      ui.form.addEventListener("submit", handleSubmission);
+
+      ui.langSelect.addEventListener("change", (e) => {
+        state.lang = e.target.value;
+        updateUIStrings();
+      });
+
+      ui.themeToggle.addEventListener("click", () => {
+        state.darkMode = !state.darkMode;
+        document.documentElement.classList.toggle("dark");
+        ui.themeIcon.className = state.darkMode ? "fas fa-sun" : "fas fa-moon";
+      });
+
+      // Init
+      updateUIStrings();
+    </script>
+  </body>
+</html>

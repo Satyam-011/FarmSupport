@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        /* New cloudy, light-colored gradient background */
+        background: linear-gradient(135deg, #e0f2fe, #bfdbfe, #c7d2fe);
+        background-size: 300% 300%;
+        animation: cloudAnimation 15s ease infinite;
+      }
+
+      @keyframes cloudAnimation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center min-h-screen p-4">
+    <div
+      class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-8 space-y-8 transform transition-transform duration-300 hover:scale-[1.01]"
+    >
+      <!-- Header and Search -->
+      <header class="text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900">Weather Forecast</h1>
+        <p class="mt-2 text-gray-500">Powered by the FarmSupport</p>
+      </header>
+
+      <!-- Search Form -->
+      <div class="flex flex-col sm:flex-row gap-4">
+        <input
+          type="text"
+          id="city-input"
+          placeholder="Enter a city or place"
+          class="flex-1 p-4 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 text-gray-700 placeholder-gray-400"
+        />
+        <button
+          id="search-btn"
+          class="p-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors duration-300 shadow-md transform hover:scale-105"
+        >
+          Search
+        </button>
+      </div>
+
+      <!-- Message Box -->
+      <div
+        id="message-box"
+        class="hidden p-4 text-center font-medium rounded-xl border-2 transition-all duration-300"
+      ></div>
+
+      <!-- Loading Spinner -->
+      <div
+        id="loading-spinner"
+        class="hidden flex justify-center items-center mt-6"
+      >
+        <div
+          class="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-blue-500"
+        ></div>
+      </div>
+
+      <!-- Weather Display -->
+      <div id="weather-display" class="hidden">
+        <!-- Current Weather Card -->
+        <div
+          id="current-weather"
+          class="text-center p-8 rounded-3xl bg-gradient-to-br from-blue-400 to-indigo-600 text-white shadow-lg space-y-4"
+        >
+          <h2
+            id="current-location"
+            class="text-3xl font-bold tracking-wide"
+          ></h2>
+          <div class="flex items-center justify-center gap-6 mt-4">
+            <span id="weather-icon" class="text-6xl animate-bounce-slow"></span>
+            <div class="flex flex-col items-start">
+              <div class="flex items-end">
+                <span
+                  id="current-temp"
+                  class="text-7xl font-extrabold leading-none"
+                ></span>
+                <span
+                  id="current-unit"
+                  class="text-4xl font-light self-start"
+                ></span>
+              </div>
+              <p
+                id="weather-condition"
+                class="mt-2 text-lg font-medium tracking-wide"
+              ></p>
+            </div>
+          </div>
+          <p id="current-wind" class="text-sm opacity-90"></p>
+        </div>
+
+        <!-- Hourly Forecast Section -->
+        <div class="mt-10">
+          <h3 class="text-xl font-bold text-gray-800">Next 24 Hours</h3>
+          <div
+            id="hourly-forecast-container"
+            class="flex overflow-x-auto gap-4 py-4 px-2 -mx-2 mt-4 hide-scrollbar"
+          >
+            <!-- Hourly cards are dynamically created here by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // DOM element references
+      const cityInput = document.getElementById("city-input");
+      const searchBtn = document.getElementById("search-btn");
+      const weatherDisplay = document.getElementById("weather-display");
+      const currentTempEl = document.getElementById("current-temp");
+      const currentUnitEl = document.getElementById("current-unit");
+      const currentWindEl = document.getElementById("current-wind");
+      const currentLocationEl = document.getElementById("current-location");
+      const weatherIconEl = document.getElementById("weather-icon");
+      const weatherConditionEl = document.getElementById("weather-condition");
+      const hourlyContainer = document.getElementById(
+        "hourly-forecast-container",
+      );
+      const messageBox = document.getElementById("message-box");
+      const loadingSpinner = document.getElementById("loading-spinner");
+
+      // Function to show a message box with custom styles
+      const showMessage = (message, type = "error") => {
+        messageBox.textContent = message;
+        messageBox.classList.remove("hidden");
+        if (type === "error") {
+          messageBox.classList.remove(
+            "border-green-400",
+            "bg-green-100",
+            "text-green-700",
+          );
+          messageBox.classList.add(
+            "border-red-400",
+            "bg-red-100",
+            "text-red-700",
+          );
+        } else {
+          messageBox.classList.remove(
+            "border-red-400",
+            "bg-red-100",
+            "text-red-700",
+          );
+          messageBox.classList.add(
+            "border-green-400",
+            "bg-green-100",
+            "text-green-700",
+          );
+        }
+      };
+
+      // Function to hide the message box
+      const hideMessage = () => {
+        messageBox.classList.add("hidden");
+      };
+
+      // Function to show/hide the loading spinner
+      const showLoading = (show) => {
+        loadingSpinner.classList.toggle("hidden", !show);
+        weatherDisplay.classList.toggle("hidden", show);
+      };
+
+      // Function to get weather condition emoji based on temperature
+      const getWeatherCondition = (temp) => {
+        if (temp > 25) return { text: "Hot", icon: "☀️" };
+        if (temp > 15) return { text: "Warm", icon: "🌤️" };
+        if (temp > 5) return { text: "Mild", icon: "☁️" };
+        return { text: "Cold", icon: "❄️" };
+      };
+
+      // Function to fetch weather data from Open-Meteo
+      const getWeatherData = async (
+        latitude,
+        longitude,
+        locationName = "Your Location",
+      ) => {
+        const apiUrl = `ENTER_API_URL`;
+
+        showLoading(true);
+        hideMessage();
+
+        try {
+          const response = await fetch(apiUrl);
+          if (!response.ok) {
+            throw new Error("Failed to fetch weather data.");
+          }
+          const data = await response.json();
+          displayWeather(data, locationName);
+        } catch (error) {
+          showMessage(
+            `Could not get weather data. Please try again later. Error: ${error.message}`,
+          );
+        } finally {
+          showLoading(false);
+        }
+      };
+
+      // Function to fetch coordinates from a city name using a geocoding API
+      const getCoordinatesFromCity = async (cityName) => {
+        const geocodingUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cityName)}&format=json&limit=1`;
+
+        try {
+          const response = await fetch(geocodingUrl);
+          if (!response.ok) {
+            throw new Error("Failed to fetch location data.");
+          }
+          const data = await response.json();
+          if (data.length > 0) {
+            const lat = data[0].lat;
+            const lon = data[0].lon;
+            const name = data[0].display_name.split(",").slice(0, 2).join(", ");
+            return { lat, lon, name };
+          } else {
+            throw new Error(`Location not found for "${cityName}".`);
+          }
+        } catch (error) {
+          showMessage(
+            `Failed to get location coordinates. Error: ${error.message}`,
+          );
+          showLoading(false);
+          return null;
+        }
+      };
+
+      // Function to display the weather data on the page
+      const displayWeather = (data, locationName) => {
+        if (!data.current || !data.hourly) {
+          showMessage("Invalid weather data received.");
+          return;
+        }
+
+        weatherDisplay.classList.remove("hidden");
+        currentLocationEl.textContent = locationName;
+
+        // Current Weather
+        const currentTemp = Math.round(data.current.temperature_2m);
+        currentTempEl.textContent = currentTemp;
+        currentUnitEl.textContent = data.current_units.temperature_2m;
+        currentWindEl.textContent = `Wind: ${Math.round(data.current.wind_speed_10m)} ${data.current_units.wind_speed_10m}`;
+
+        // Get weather condition based on temperature (a simple approximation)
+        const { text, icon } = getWeatherCondition(currentTemp);
+        weatherIconEl.textContent = icon;
+        weatherConditionEl.textContent = text;
+
+        // Hourly Forecast
+        hourlyContainer.innerHTML = ""; // Clear previous forecast cards
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        for (let i = 0; i < 24; i++) {
+          const hourIndex = (currentHour + i) % data.hourly.time.length;
+          const hourTime = new Date(data.hourly.time[hourIndex]);
+          const hourTemp = Math.round(data.hourly.temperature_2m[hourIndex]);
+          const hourHumidity = data.hourly.relative_humidity_2m[hourIndex];
+          const { icon: hourlyIcon } = getWeatherCondition(hourTemp);
+
+          const card = document.createElement("div");
+          card.className =
+            "flex-shrink-0 w-28 p-4 rounded-xl bg-white bg-opacity-70 text-center shadow-lg transition-transform duration-300 hover:scale-105 backdrop-blur-sm";
+          card.innerHTML = `
+                    <p class="text-sm font-semibold text-gray-700">${hourTime.getHours()}:00</p>
+                    <span class="text-3xl block my-2">${hourlyIcon}</span>
+                    <p class="text-2xl font-bold text-gray-900">${hourTemp}°C</p>
+                    <p class="text-xs text-gray-500 mt-1">💧 ${hourHumidity}%</p>
+                `;
+          hourlyContainer.appendChild(card);
+        }
+      };
+
+      // Event listener for the "Search" button
+      searchBtn.addEventListener("click", async () => {
+        const cityName = cityInput.value.trim();
+        if (cityName) {
+          const location = await getCoordinatesFromCity(cityName);
+          if (location) {
+            getWeatherData(location.lat, location.lon, location.name);
+          }
+        } else {
+          showMessage("Please enter a city name.");
+        }
+      });
+    </script>
+  </body>
+</html>

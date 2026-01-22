@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmSupport - Smart Farming Platform</title>
+    <meta name="description" content="AI-powered crop diagnosis, farming community, and agricultural marketplace. Your complete farming support platform.">
+    <meta name="keywords" content="farming, agriculture, crop diagnosis, AI, farming community, agricultural supplies">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <div class="nav-content">
+                <!-- Logo -->
+                <div class="nav-logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 20h10l1.5-1.5L20 17v-2l-1.5-1.5L18 12V9l-1.5-1.5L16 6V4l-1.5-1.5L12 2"/>
+                        <path d="M7 4v16l1.5 1.5L10 22h4l1.5-1.5L17 20V4l-1.5-1.5L14 2h-4L8.5 3.5"/>
+                        <path d="M7 8h10"/>
+                        <path d="M7 12h10"/>
+                        <path d="M7 16h10"/>
+                    </svg>
+                    <h1 class="logo-text">
+                        <span class="logo-farm">Farm</span>Support
+                    </h1>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="nav-desktop">
+                    <button class="nav-btn nav-btn-primary" onclick="window.open('cropdetect.html', '_blank')" aria-label="Start crop diagnosis with AI">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                            <circle cx="12" cy="13" r="3"/>
+                        </svg>
+                        <span>Crop Diagnosis</span>
+                    </button>
+                    <button class="nav-btn" onclick="window.open('chatSupport.html', '_blank')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Chat Support</span>
+                    </button>
+
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="nav-mobile">
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-expanded="false" aria-label="Toggle navigation menu">
+                        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                        <svg class="close-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div class="mobile-menu hidden">
+                <div class="mobile-menu-content">
+                   <button class="mobile-nav-btn mobile-nav-btn-primary" onclick="window.open('cropdetect.html', '_blank')">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                   <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                  <circle cx="12" cy="13" r="3"/>
+                  </svg>
+                  <span>Crop Diagnosis</span>
+                    </button>
+                    <button class="mobile-nav-btn" onclick="window.open('chatSupport.html', '_blank')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Chat Support</span>
+                    </button>
+                    <button class="mobile-nav-btn" onclick="scrollToSection('marketplace'); closeMobileMenu();">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        <span>Marketplace</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main role="main">
+        <!-- Hero Section -->
+        <section class="hero-section" role="banner">
+            <div class="container">
+                <div class="hero-grid">
+                    <!-- Content -->
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h1 class="hero-title">
+                                Smart Farming,
+                                <span class="hero-title-accent">Better Harvest</span>
+                            </h1>
+                            <p class="hero-description">
+                                Get instant crop diagnosis, connect with farming experts, and access quality supplies. 
+                                Your complete farming support platform powered by AI.
+                            </p>
+                        </div>
+
+                        <!-- Main CTA -->
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-lg" onclick="window.open('cropdetect.html', '_blank')" aria-label="Start crop diagnosis with AI">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                                    <circle cx="12" cy="13" r="3"/>
+                                </svg>
+                                <span>Diagnose Crop Issue</span>
+                                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12,5 19,12 12,19"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hero Image -->
+                    <div class="hero-image">
+                        <div class="hero-image-container">
+                            <img src="https://images.unsplash.com/photo-1708794666324-85ad91989d20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBmYXJtJTIwYWdyaWN1bHR1cmUlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc1NjQ5NDEzNHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" 
+                                 alt="Modern farming technology with smart agriculture solutions" 
+                                 class="hero-img">
+                            
+                            <!-- Overlay card -->
+                            <div class="hero-overlay-card">
+                                <div class="overlay-card-content">
+                                    <div class="overlay-card-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                                            <circle cx="12" cy="13" r="3"/>
+                                        </svg>
+                                    </div>
+                                    <div class="overlay-card-text">
+                                        <p class="overlay-card-title">AI-Powered Diagnosis</p>
+                                        <p class="overlay-card-subtitle">95% accuracy in crop disease detection</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Access Section -->
+        <section class="quick-access-section" aria-labelledby="quick-access-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="quick-access-title">Quick Access</h2>
+                    <p>Everything you need for successful farming at your fingertips</p>
+                </div>
+
+                <div class="quick-access-grid">
+                    <div class="quick-access-tile primary-tile" onclick="window.open('cropdetect.html', '_blank')" role="button" tabindex="0" 
+                         aria-label="Crop Diagnosis: AI-powered disease detection">
+                        <div class="tile-icon bg-green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                                <circle cx="12" cy="13" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Crop Diagnosis</h3>
+                            <p>AI-powered disease detection</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-access-tile" role="button" onclick="window.open('weather.html', '_blank')" tabindex="0" aria-label="Weather: Local weather forecast">
+                        <div class="tile-icon bg-blue">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17.5 21H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                                <path d="M16 16h.01"/>
+                                <path d="M8 16h.01"/>
+                                <path d="M12 16h.01"/>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Weather</h3>
+                            <p>Local weather forecast</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-access-tile" role="button" onclick="window.open('chatSupport.html', '_blank')" tabindex="0" 
+                         onclick="scrollToSection('community')" aria-label="Community: Connect with farmers">
+                        <div class="tile-icon bg-purple">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Chat Support</h3>
+                            <p>Chat With AI Expert</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-access-tile" role="button" onclick="window.open('farmCalender.html', '_blank')" tabindex="0" aria-label="Crop Calendar: Planting & harvest times">
+                        <div class="tile-icon bg-yellow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <h3>Crop Calendar</h3>
+                            <p>Planting & harvest times</p>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+                <!-- Community CTA -->
+                <div class="community-cta">
+                    <div class="community-cta-content">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="community-cta-icon">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <h3>Join Our Farming Community</h3>
+                        <p>Connect with fellow farmers, share knowledge, and grow together</p>
+                        <div class="community-cta-actions">
+                            <button class="nav-btn nav-btn-primary" onclick="window.open('https://www.instagram.com/farmar_sons10?igsh=ZnlqamQ2N25lczJk', '_blank')" aria-label="Start crop diagnosis with AI">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        <span>Join Community</span>
+                    </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <!-- Main Footer Content -->
+            <div class="footer-main">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <svg class="footer-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 20h10l1.5-1.5L20 17v-2l-1.5-1.5L18 12V9l-1.5-1.5L16 6V4l-1.5-1.5L12 2"/>
+                            <path d="M7 4v16l1.5 1.5L10 22h4l1.5-1.5L17 20V4l-1.5-1.5L14 2h-4L8.5 3.5"/>
+                            <path d="M7 8h10"/>
+                            <path d="M7 12h10"/>
+                            <path d="M7 16h10"/>
+                        </svg>
+                        <h3><span class="brand-farm">Farm</span>Support</h3>
+                    </div>
+                    <p class="footer-description">
+                        Empowering farmers with AI-powered crop diagnosis, community support, 
+                        and quality agricultural supplies. Your complete farming companion.
+                    </p>
+                    <!-- Contact Info -->
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <span>1800-FARM-HELP (24/7)</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span>support@farmsupport.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span>Serving farmers across India</span>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="footer-social">
+                        <button class="social-btn" aria-label="Follow us on Facebook">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </button>
+                        <button class="social-btn" aria-label="Follow us on Twitter">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </button>
+                        <button class="social-btn" onclick="window.open('https://www.instagram.com/farmar_sons10?igsh=ZnlqamQ2N25lczJk', '_blank')" aria-label="Follow us on Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </button>
+                        <button class="social-btn" aria-label="Follow us on YouTube">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                                <polygon points="9.75,15.02 15.5,11.75 9.75,8.48"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="cropdetect.html">Crop Diagnosis</a></li>
+                        <li><a href="weather.html">Weather Forecast</a></li>
+                        <li><a href="chatSupport.html">Chat Support</a></li>
+                        <li><a href="farmCalender.html">Farm Calender</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Footer -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="footer-copyright">
+                        © 2026 FarmSupport. All rights reserved. Made with ❤️ for farmers.
+                    </div>
+                    
+                    <div class="footer-legal">
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                        <a href="#cookies">Cookie Policy</a>
+                        <a href="#disclaimer">Disclaimer</a>
+                    </div>
+                </div>
+
+                <!-- Accessibility Statement -->
+                <div class="footer-accessibility">
+                    <p>
+                        This platform is designed to be accessible for farmers with varying literacy levels. 
+                        We support voice commands and provide visual guides for all major features.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+                        <!-- AI Chat Section -->
+                        <div id="chatCard" class="chat-card hidden">
+                            <div class="chat-header">
+                                <h3>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                    AI Expert Chat
+                                </h3>
+                            </div>
+                            <div class="chat-content">
+                                <div id="chatMessages" class="chat-messages">
+                                    <p class="chat-placeholder">Ask me anything about your crop diagnosis!</p>
+                                </div>
+                                <form id="chatForm" class="chat-form">
+                                    <textarea id="chatInput" placeholder="Ask about treatment, prevention, or any other questions..." rows="2"></textarea>
+                                    <button type="submit" class="chat-send">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="22" y1="2" x2="11" y2="13"/>
+                                            <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>
